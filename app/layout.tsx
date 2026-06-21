@@ -32,7 +32,7 @@ export default function RootLayout({
         <div className="flex min-h-screen flex-col">
           <header className="topo border-b border-sage-dark bg-paper-raised/80 backdrop-blur-sm">
             <div className="mx-auto max-w-6xl px-4">
-              <div className="flex h-16 items-center justify-between gap-4">
+              <div className="flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
                 <Link
                   href="/"
                   className="group flex items-center gap-2.5"

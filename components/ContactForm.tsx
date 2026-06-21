@@ -1,5 +1,13 @@
+"use client";
+
+import { useState } from "react";
 import Link from "next/link";
-import { TextField, TextAreaField, SelectField } from "@/components/FormFields";
+import {
+  TextField,
+  TextAreaField,
+  inputCls,
+} from "@/components/FormFields";
+import { createCompanyInline } from "@/app/companies/actions";
 
 type Option = { id: string; name: string };
 
@@ -15,7 +23,7 @@ type ContactDefaults = {
 
 export default function ContactForm({
   action,
-  companies,
+  companies: initialCompanies,
   defaults,
   defaultCompanyId,
   submitLabel,
@@ -28,6 +36,31 @@ export default function ContactForm({
   submitLabel: string;
   cancelHref: string;
 }) {
+  const [companies, setCompanies] = useState(initialCompanies);
+  const [companyId, setCompanyId] = useState(
+    defaults?.companyId ?? defaultCompanyId ?? ""
+  );
+  const [adding, setAdding] = useState(false);
+  const [newName, setNewName] = useState("");
+  const [savingCompany, setSavingCompany] = useState(false);
+
+  async function handleAddCompany() {
+    const name = newName.trim();
+    if (!name) return;
+    setSavingCompany(true);
+    try {
+      const created = await createCompanyInline(name);
+      setCompanies((prev) =>
+        [...prev, created].sort((a, b) => a.name.localeCompare(b.name))
+      );
+      setCompanyId(created.id);
+      setNewName("");
+      setAdding(false);
+    } finally {
+      setSavingCompany(false);
+    }
+  }
+
   return (
     <form action={action} className="max-w-xl space-y-5">
       <TextField
@@ -44,13 +77,59 @@ export default function ContactForm({
           defaultValue={defaults?.title ?? ""}
           placeholder="Engineering Manager"
         />
-        <SelectField
-          label="Company"
-          name="companyId"
-          options={companies.map((c) => ({ value: c.id, label: c.name }))}
-          defaultValue={defaults?.companyId ?? defaultCompanyId ?? ""}
-          placeholder="— No company —"
-        />
+        <div className="space-y-1.5">
+          <div className="flex items-center justify-between">
+            <span className="font-display text-xs font-medium uppercase tracking-[0.12em] text-moss">
+              Company
+            </span>
+            <button
+              type="button"
+              onClick={() => setAdding((v) => !v)}
+              className="font-display text-xs font-medium uppercase tracking-[0.08em] text-rust transition-colors hover:text-rust-deep"
+            >
+              {adding ? "Cancel" : "+ Add company"}
+            </button>
+          </div>
+          <select
+            id="companyId"
+            name="companyId"
+            value={companyId}
+            onChange={(e) => setCompanyId(e.target.value)}
+            className={inputCls}
+          >
+            <option value="">— No company —</option>
+            {companies.map((c) => (
+              <option key={c.id} value={c.id}>
+                {c.name}
+              </option>
+            ))}
+          </select>
+          {adding && (
+            <div className="mt-2 flex gap-2">
+              <input
+                type="text"
+                value={newName}
+                onChange={(e) => setNewName(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === "Enter") {
+                    e.preventDefault();
+                    void handleAddCompany();
+                  }
+                }}
+                placeholder="New company name"
+                className={inputCls}
+              />
+              <button
+                type="button"
+                onClick={() => void handleAddCompany()}
+                disabled={savingCompany || newName.trim() === ""}
+                className="btn-primary btn-sm shrink-0 disabled:opacity-50"
+              >
+                {savingCompany ? "Saving…" : "Save"}
+              </button>
+            </div>
+          )}
+        </div>
         <TextField
           label="Email"
           name="email"
