@@ -21,9 +21,9 @@ export const metadata = {
   title: "Analytics · Scout",
 };
 
-// Pipeline funnel stages, ordered Saved → Accepted. Withdrawn/Rejected are
+// Pipeline funnel stages, ordered Applied → Accepted. Withdrawn/Rejected are
 // outcomes, not stages, so they're left to the status donut.
-const FUNNEL_ORDER = ["Saved", "Applied", "Interviewing", "Offer", "Accepted"];
+const FUNNEL_ORDER = ["Applied", "Interviewing", "Offer", "Accepted"];
 
 export default async function AnalyticsPage() {
   const [apps, interactions] = await Promise.all([
@@ -48,9 +48,16 @@ export default async function AnalyticsPage() {
     .map((s) => ({ label: s.label, value: s.value, color: statusFill(s.key) }));
 
   const statusMap = new Map(statuses.map((s) => [s.key, s.value]));
-  const funnelStages = FUNNEL_ORDER.map((label) => ({
+  // Cumulative funnel: each stage counts every application at or beyond it, so
+  // the series narrows monotonically (an app now at Offer also cleared Applied
+  // and Interviewing) and share-of-top never exceeds 100%. Rejected/Withdrawn
+  // drop out of the pipeline and aren't counted at any stage.
+  const funnelStages = FUNNEL_ORDER.map((label, i) => ({
     label,
-    value: statusMap.get(label) ?? 0,
+    value: FUNNEL_ORDER.slice(i).reduce(
+      (sum, s) => sum + (statusMap.get(s) ?? 0),
+      0
+    ),
   }));
 
   const stateCounts = byState(apps);
@@ -132,7 +139,7 @@ export default async function AnalyticsPage() {
               <div className="card p-5">
                 <Funnel stages={funnelStages} />
                 <p className="mt-3 text-xs text-moss-light">
-                  Share is relative to leads saved at the top of the funnel.
+                  Share is relative to applications at the top of the funnel.
                 </p>
               </div>
             </div>

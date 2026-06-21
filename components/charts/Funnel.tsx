@@ -1,5 +1,6 @@
-// Pipeline funnel — centered bars showing how leads narrow from Saved through
-// Accepted, with the conversion rate from the top of the funnel at each stage.
+// Pipeline funnel — centered bars showing how leads narrow from Applied
+// through Accepted, with the conversion rate from the top of the funnel at each
+// stage.
 import { statusFill } from "@/lib/colors";
 
 export type FunnelStage = { label: string; value: number };

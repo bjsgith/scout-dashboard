@@ -2,7 +2,6 @@
 // Values mirror prisma/schema.prisma exactly.
 
 export const APPLICATION_STATUSES = [
-  "Saved",
   "Applied",
   "Interviewing",
   "Offer",

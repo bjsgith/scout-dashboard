@@ -148,7 +148,7 @@ export default function ApplicationForm({
           label="Status"
           name="status"
           options={options(APPLICATION_STATUSES)}
-          defaultValue={defaults?.status ?? "Saved"}
+          defaultValue={defaults?.status ?? "Applied"}
         />
         <TextField
           label="Date applied"

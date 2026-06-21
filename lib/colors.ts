@@ -5,7 +5,6 @@ import type { ApplicationStatus } from "@/lib/enums";
 
 // Tailwind utility strings for the pill-style status badge.
 export const STATUS_BADGE: Record<ApplicationStatus, string> = {
-  Saved: "bg-[#E8E4D6] text-[#6B6550] ring-[#D6D1BD]", // stone / staged
   Applied: "bg-[#D9E4E1] text-[#355F60] ring-[#C2D3CF]", // lake blue
   Interviewing: "bg-[#F1E3C2] text-[#876326] ring-[#E2CE9A]", // amber / on the move
   Offer: "bg-[#D9E7CE] text-[#3F6233] ring-[#C2D6B2]", // fern
@@ -19,7 +18,6 @@ export const STATUS_BADGE_FALLBACK = "bg-[#E8E4D6] text-[#6B6550] ring-[#D6D1BD]
 // Solid fill hex per status — the darker companion to each badge tint, tuned
 // to read clearly as chart segments against the paper surfaces.
 export const STATUS_FILL: Record<ApplicationStatus, string> = {
-  Saved: "#A7A088", // stone
   Applied: "#5E8F8C", // lake
   Interviewing: "#C99A3A", // amber
   Offer: "#6E9A57", // fern

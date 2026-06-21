@@ -41,10 +41,8 @@ export function rates(apps: AppLike[]) {
   const total = apps.length;
   const by = (s: string) => apps.filter((a) => a.status === s).length;
   const active = apps.filter((a) => !TERMINAL_STATUSES.has(a.status)).length;
-  // "Responded" = the search moved past the initial saved/applied stages.
-  const responded = apps.filter(
-    (a) => !["Saved", "Applied"].includes(a.status)
-  ).length;
+  // "Responded" = the search moved past the initial applied stage.
+  const responded = apps.filter((a) => a.status !== "Applied").length;
   const offers = by("Offer") + by("Accepted");
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
   return {
@@ -73,7 +71,10 @@ export function byCity(apps: AppLike[]): Slice[] {
   for (const a of apps) {
     const city = a.city?.trim();
     const st = a.state?.trim();
-    const label = [city, st].filter(Boolean).join(", ") || "Unspecified";
+    const label = [city, st].filter(Boolean).join(", ");
+    // Skip applications with no location, matching byState's null handling, so
+    // "Top locations" never ranks an "Unspecified" aggregate above real cities.
+    if (!label) continue;
     m.set(label, (m.get(label) ?? 0) + 1);
   }
   return [...m.entries()]
