@@ -22,6 +22,7 @@ export type ApplicationDefaults = {
   jobTitle?: string;
   companyId?: string;
   status?: string;
+  reachedInterview?: boolean;
   dateApplied?: string;
   platform?: string | null;
   employmentType?: string | null;
@@ -193,6 +194,17 @@ export default function ApplicationForm({
           placeholder="$160k–$185k"
         />
       </div>
+
+      <label className="flex items-center gap-2.5 text-sm text-moss">
+        <input
+          type="checkbox"
+          name="reachedInterview"
+          value="on"
+          defaultChecked={defaults?.reachedInterview ?? false}
+          className="rounded border-sage-dark text-rust focus:ring-rust"
+        />
+        Reached interview stage
+      </label>
 
       <TextField
         label="Job posting URL"

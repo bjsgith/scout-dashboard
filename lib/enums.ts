@@ -8,6 +8,7 @@ export const APPLICATION_STATUSES = [
   "Accepted",
   "Rejected",
   "Withdrawn",
+  "AssumedStale",
 ] as const;
 export type ApplicationStatus = (typeof APPLICATION_STATUSES)[number];
 
@@ -26,6 +27,7 @@ export type WorkMode = (typeof WORK_MODES)[number];
 export const INTERACTION_TYPES = [
   "Call",
   "Email",
+  "Text",
   "Coffee",
   "LinkedIn",
   "Meeting",
@@ -34,6 +36,7 @@ export const INTERACTION_TYPES = [
 export type InteractionType = (typeof INTERACTION_TYPES)[number];
 
 const LABELS: Record<string, string> = {
+  AssumedStale: "Assumed Stale",
   FullTime: "Full-time",
   PartTime: "Part-time",
   Internship: "Internship",

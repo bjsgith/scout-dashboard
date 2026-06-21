@@ -97,7 +97,7 @@ export default function ApplicationsTable({ rows }: { rows: AppRow[] }) {
             const count = rows.filter((r) => r.status === s).length;
             return (
               <option key={s} value={s}>
-                {s} ({count})
+                {enumLabel(s)} ({count})
               </option>
             );
           })}

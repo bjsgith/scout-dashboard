@@ -5,8 +5,8 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## What this is
 
 Scout is a **local, single-user** job-search dashboard: tracks job applications and a
-networking rolodex of contacts with interaction history. Companies are the connective
-tissue between the two. It binds to `127.0.0.1`, has **no auth by design**, and talks to
+networking rolodex of contacts with interaction history, plus an analytics tab over the
+pipeline. Companies are the connective tissue between the two. It binds to `127.0.0.1`, has **no auth by design**, and talks to
 no external APIs. Stack: Next.js (App Router, TS, React 19) · Prisma · SQLite · Tailwind.
 
 ## Commands
@@ -36,6 +36,15 @@ There is no test suite. After editing `prisma/schema.prisma`, run `npm run db:mi
 - **Single source of truth for enums.** `prisma/schema.prisma` defines the enums; `lib/enums.ts`
   re-declares them as `as const` arrays with display labels (`enumLabel`, `options`) for forms,
   tables, and badges. Keep these two in sync — changing an enum means editing both.
+  Prisma enum values **cannot contain spaces** (e.g. `AssumedStale`); multi-word display
+  text lives in `enumLabel`'s `LABELS` map. **Always render a status through `enumLabel`,
+  never raw** — `StatusBadge`, the dashboard ridge, the table filter, and the analytics
+  donut all do. On SQLite, adding an enum *value* needs no migration (enums are TEXT), but
+  `npx prisma generate` (via `db:migrate`) is still needed to refresh the client types.
+
+- **"Terminal" statuses (`Accepted`/`Rejected`/`Withdrawn`/`AssumedStale`) are hand-listed
+  in more than one place** — `lib/analytics.ts` (`TERMINAL_STATUSES`) and
+  `app/applications/[id]/page.tsx`. Update every copy when the set changes.
 
 - **Shared helpers (use these, don't reinvent):**
   - `lib/db.ts` — Prisma client singleton (`import { prisma } from "@/lib/db"`).
@@ -45,10 +54,18 @@ There is no test suite. After editing `prisma/schema.prisma`, run `npm run db:mi
   - `lib/staleness.ts` — `isStale`, `isFollowUpDue`, `lastSpoken`, `daysSince`. "Last spoken"
     for a contact is always derived from `max(interaction.date)`, never stored.
   - `lib/settings.ts` — `getSettings()` upserts the single pinned `Settings` row (id=1) holding
-    `applicationStaleDays` / `contactStaleDays` thresholds used by the dashboard follow-up widget.
+    `applicationStaleDays` / `contactStaleDays` thresholds. `applicationStaleDays` flags
+    gone-quiet open apps in the dashboard "Awaiting response" list; `contactStaleDays` drives
+    the blaze on overdue contacts.
   - `lib/format.ts` — date helpers. **`parseDateInput` parses to local noon** to avoid TZ
     day-rollover; use it (and `toDateInputValue`) for all `<input type="date">` round-trips.
+  - `lib/analytics.ts` — pure aggregation helpers (`statusCounts`, `rates`, `byState`,
+    `monthlyApplied`, etc.) over plain arrays; the analytics page queries Prisma then maps.
+  - `lib/colors.ts` (palette/`statusFill`) and `lib/us-states.ts` back the charts.
   - `@/*` path alias maps to the repo root.
+
+- **Charts are hand-rolled SVG** in `components/charts/` (`DonutChart`, `BarList`,
+  `TrendLine`, `USStateMap`, `Funnel`, `StatTile`) — no charting library. Don't add one.
 
 ## Data model (prisma/schema.prisma)
 

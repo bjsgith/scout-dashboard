@@ -17,6 +17,7 @@ enum ApplicationStatus {
   Accepted
   Rejected
   Withdrawn
+  AssumedStale
 }
 
 enum EmploymentType {
@@ -36,6 +37,7 @@ enum WorkMode {
 enum InteractionType {
   Call
   Email
+  Text
   Coffee
   LinkedIn
   Meeting
@@ -56,24 +58,25 @@ model Company {
 }
 
 model Application {
-  id             String            @id @default(cuid())
-  jobTitle       String
-  companyId      String
-  company        Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  status         ApplicationStatus @default(Applied)
-  dateApplied    DateTime?
-  platform       String?
-  employmentType EmploymentType?
-  city           String?
-  state          String?
-  workMode       WorkMode?
-  pay            String?
-  jobUrl         String?
-  notes          String?
-  followUpDate   DateTime?
-  lastActivityAt DateTime          @default(now())
-  createdAt      DateTime          @default(now())
-  updatedAt      DateTime          @updatedAt
+  id               String            @id @default(cuid())
+  jobTitle         String
+  companyId        String
+  company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  status           ApplicationStatus @default(Applied)
+  reachedInterview Boolean           @default(false)
+  dateApplied      DateTime?
+  platform         String?
+  employmentType   EmploymentType?
+  city             String?
+  state            String?
+  workMode         WorkMode?
+  pay              String?
+  jobUrl           String?
+  notes            String?
+  followUpDate     DateTime?
+  lastActivityAt   DateTime          @default(now())
+  createdAt        DateTime          @default(now())
+  updatedAt        DateTime          @updatedAt
 
   contacts Contact[] @relation("ApplicationContacts")
 
@@ -112,7 +115,7 @@ model Interaction {
 }
 
 model Settings {
-  id                  Int @id @default(1)
+  id                   Int @id @default(1)
   applicationStaleDays Int @default(7)
   contactStaleDays     Int @default(30)
 }

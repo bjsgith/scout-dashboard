@@ -3,14 +3,17 @@
 // since SVG fills can't use Tailwind tokens).
 import type { ApplicationStatus } from "@/lib/enums";
 
-// Tailwind utility strings for the pill-style status badge.
+// Tailwind utility strings for the pill-style status badge. Semantic, traffic-
+// light coloring so a status reads at a glance: blue = in the queue, greens =
+// advancing / won, amber = decision pending, red = lost, gray = inactive.
 export const STATUS_BADGE: Record<ApplicationStatus, string> = {
-  Applied: "bg-[#D9E4E1] text-[#355F60] ring-[#C2D3CF]", // lake blue
-  Interviewing: "bg-[#F1E3C2] text-[#876326] ring-[#E2CE9A]", // amber / on the move
-  Offer: "bg-[#D9E7CE] text-[#3F6233] ring-[#C2D6B2]", // fern
-  Accepted: "bg-[#C8DCC3] text-[#234E2F] ring-[#A9C6A2]", // deep pine — summit
-  Rejected: "bg-rust-soft text-rust-deep ring-[#DDBBA6]", // clay
-  Withdrawn: "bg-[#E6E3DA] text-[#928C7C] ring-[#D5D1C3]", // faded
+  Applied: "bg-[#CFE0F0] text-[#235581] ring-[#A9C8E4]", // blue — submitted, waiting
+  Interviewing: "bg-[#D4EBC2] text-[#3C6B1F] ring-[#B2D89B]", // green — advancing
+  Offer: "bg-[#F6E0A6] text-[#86570E] ring-[#E7C97D]", // amber-gold — decision pending
+  Accepted: "bg-[#B6DFB4] text-[#1C5A28] ring-[#8CC58B]", // deep green — won / summit
+  Rejected: "bg-[#F3CDC5] text-[#9C281A] ring-[#E2A89B]", // red — lost
+  Withdrawn: "bg-[#E2E0DA] text-[#6D695F] ring-[#CECABE]", // gray — inactive
+  AssumedStale: "bg-[#E7DAC4] text-[#7C6A45] ring-[#D6C4A4]", // dusty tan — gone quiet
 };
 
 export const STATUS_BADGE_FALLBACK = "bg-[#E8E4D6] text-[#6B6550] ring-[#D6D1BD]";
@@ -24,6 +27,7 @@ export const STATUS_FILL: Record<ApplicationStatus, string> = {
   Accepted: "#2F6B3D", // pine summit
   Rejected: "#A8482A", // rust / clay
   Withdrawn: "#B4AE9E", // faded
+  AssumedStale: "#B79B6C", // dusty tan — gone quiet
 };
 
 export function statusFill(status: string): string {

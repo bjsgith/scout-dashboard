@@ -2,6 +2,8 @@ import { prisma } from "@/lib/db";
 import {
   statusCounts,
   rates,
+  rejectionBreakdown,
+  conversionFunnel,
   byState,
   byCity,
   byEnumField,
@@ -21,15 +23,12 @@ export const metadata = {
   title: "Analytics · Scout",
 };
 
-// Pipeline funnel stages, ordered Applied → Accepted. Withdrawn/Rejected are
-// outcomes, not stages, so they're left to the status donut.
-const FUNNEL_ORDER = ["Applied", "Interviewing", "Offer", "Accepted"];
-
 export default async function AnalyticsPage() {
   const [apps, interactions] = await Promise.all([
     prisma.application.findMany({
       select: {
         status: true,
+        reachedInterview: true,
         city: true,
         state: true,
         workMode: true,
@@ -43,22 +42,20 @@ export default async function AnalyticsPage() {
 
   const r = rates(apps);
   const statuses = statusCounts(apps);
+  const rejectionBars = rejectionBreakdown(apps).map((s) => ({
+    label: s.label,
+    value: s.value,
+    // Color by category, not position — "Without interview" must read rust even
+    // when it's the only bar (the other category got filtered out at zero).
+    color: s.key === "after" ? INK.mossLight : INK.rust,
+  }));
   const donutData = statuses
     .filter((s) => s.value > 0)
     .map((s) => ({ label: s.label, value: s.value, color: statusFill(s.key) }));
 
-  const statusMap = new Map(statuses.map((s) => [s.key, s.value]));
-  // Cumulative funnel: each stage counts every application at or beyond it, so
-  // the series narrows monotonically (an app now at Offer also cleared Applied
-  // and Interviewing) and share-of-top never exceeds 100%. Rejected/Withdrawn
-  // drop out of the pipeline and aren't counted at any stage.
-  const funnelStages = FUNNEL_ORDER.map((label, i) => ({
-    label,
-    value: FUNNEL_ORDER.slice(i).reduce(
-      (sum, s) => sum + (statusMap.get(s) ?? 0),
-      0
-    ),
-  }));
+  // Historical conversion funnel — counts how far every application got, so an
+  // interviewed-then-rejected (or stale) lead still shows at "Interviewed".
+  const funnelStages = conversionFunnel(apps);
 
   const stateCounts = byState(apps);
   const cityBars = byCity(apps).map((s) => ({
@@ -108,13 +105,18 @@ export default async function AnalyticsPage() {
       ) : (
         <>
           {/* Headline rates */}
-          <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
+          <section className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-6">
             <StatTile value={r.total} label="Applications" />
             <StatTile value={r.active} label="Active" hint="not closed out" />
             <StatTile
               value={`${r.responseRate}%`}
               label="Response rate"
               hint="past applied"
+            />
+            <StatTile
+              value={`${r.interviewRate}%`}
+              label="Interview rate"
+              hint="reached interview"
             />
             <StatTile value={`${r.offerRate}%`} label="Offer rate" accent />
             <StatTile value={`${r.rejectionRate}%`} label="Rejection rate" />
@@ -139,9 +141,26 @@ export default async function AnalyticsPage() {
               <div className="card p-5">
                 <Funnel stages={funnelStages} />
                 <p className="mt-3 text-xs text-moss-light">
-                  Share is relative to applications at the top of the funnel.
+                  How far every application got — interviewed counts anyone who
+                  reached an interview, won or not. Share is relative to all
+                  applications.
                 </p>
               </div>
+            </div>
+          </section>
+
+          {/* Rejections — interviewed-then-passed vs. never got in. */}
+          <section className="space-y-3">
+            <div className="flex items-baseline gap-2.5">
+              <span className="blaze" aria-hidden />
+              <h2 className="section-title">Rejections</h2>
+            </div>
+            <div className="card space-y-3 p-5">
+              <h3 className="eyebrow">Reached interview vs. not</h3>
+              <BarList
+                data={rejectionBars}
+                emptyMessage="No rejections logged yet."
+              />
             </div>
           </section>
 

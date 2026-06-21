@@ -7,6 +7,7 @@ import { normalizeState } from "@/lib/us-states";
 // Minimal shapes — just the fields the analytics actually read.
 export type AppLike = {
   status: string;
+  reachedInterview: boolean;
   city: string | null;
   state: string | null;
   workMode: string | null;
@@ -21,7 +22,26 @@ export type InteractionLike = {
 };
 
 // Closed/terminal statuses — used to separate the live pipeline from outcomes.
-export const TERMINAL_STATUSES = new Set(["Accepted", "Rejected", "Withdrawn"]);
+export const TERMINAL_STATUSES = new Set([
+  "Accepted",
+  "Rejected",
+  "Withdrawn",
+  "AssumedStale",
+]);
+
+// Statuses that imply an interview happened, even if the explicit flag was
+// never ticked (you can't be Interviewing/Offer/Accepted without one).
+const INTERVIEW_STATUSES = new Set(["Interviewing", "Offer", "Accepted"]);
+
+/**
+ * True when an application reached the interview stage — either the explicit
+ * `reachedInterview` flag (the only signal once a lead is Rejected / went stale)
+ * or a current status at/past Interviewing. Single source of truth so the
+ * interview rate and the conversion funnel always agree.
+ */
+export function reachedInterviewStage(a: AppLike): boolean {
+  return a.reachedInterview || INTERVIEW_STATUSES.has(a.status);
+}
 
 export type Slice = { label: string; value: number; key: string };
 
@@ -31,7 +51,7 @@ export function statusCounts(apps: AppLike[]): Slice[] {
   for (const a of apps) counts.set(a.status, (counts.get(a.status) ?? 0) + 1);
   return APPLICATION_STATUSES.map((s) => ({
     key: s,
-    label: s,
+    label: enumLabel(s),
     value: counts.get(s) ?? 0,
   }));
 }
@@ -41,9 +61,13 @@ export function rates(apps: AppLike[]) {
   const total = apps.length;
   const by = (s: string) => apps.filter((a) => a.status === s).length;
   const active = apps.filter((a) => !TERMINAL_STATUSES.has(a.status)).length;
-  // "Responded" = the search moved past the initial applied stage.
-  const responded = apps.filter((a) => a.status !== "Applied").length;
+  // "Responded" = the search moved past the initial applied stage. An assumed-
+  // stale lead never got a reply, so it doesn't count as a response.
+  const responded = apps.filter(
+    (a) => a.status !== "Applied" && a.status !== "AssumedStale"
+  ).length;
   const offers = by("Offer") + by("Accepted");
+  const reached = apps.filter(reachedInterviewStage).length;
   const pct = (n: number) => (total === 0 ? 0 : Math.round((n / total) * 100));
   return {
     total,
@@ -51,7 +75,42 @@ export function rates(apps: AppLike[]) {
     rejectionRate: pct(by("Rejected")),
     offerRate: pct(offers),
     responseRate: pct(responded),
+    interviewRate: pct(reached),
   };
+}
+
+/**
+ * Interview reach split out for rejections — distinguishes "interviewed then
+ * passed on" from "never got past the application".
+ */
+export function rejectionBreakdown(apps: AppLike[]): Slice[] {
+  const rejected = apps.filter((a) => a.status === "Rejected");
+  const afterInterview = rejected.filter((a) => a.reachedInterview).length;
+  const noInterview = rejected.length - afterInterview;
+  return [
+    { key: "after", label: "After interview", value: afterInterview },
+    { key: "none", label: "Without interview", value: noInterview },
+  ].filter((s) => s.value > 0);
+}
+
+/**
+ * Historical conversion funnel: how far *every* application got, regardless of
+ * where it landed. Unlike a status snapshot, an app that interviewed and was
+ * then rejected (or went stale) is still counted at "Interviewed". Each stage is
+ * a superset of the next, so the funnel narrows monotonically.
+ */
+export function conversionFunnel(apps: AppLike[]): { label: string; value: number }[] {
+  const interviewed = apps.filter(reachedInterviewStage).length;
+  const offer = apps.filter(
+    (a) => a.status === "Offer" || a.status === "Accepted"
+  ).length;
+  const accepted = apps.filter((a) => a.status === "Accepted").length;
+  return [
+    { label: "Applied", value: apps.length },
+    { label: "Interviewed", value: interviewed },
+    { label: "Offer", value: offer },
+    { label: "Accepted", value: accepted },
+  ];
 }
 
 /** Per-state counts keyed by upper-cased state value (for the choropleth). */

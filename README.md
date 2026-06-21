@@ -1,9 +1,9 @@
 # Scout — Job Search Dashboard
 
 A local, single-user web dashboard to track job applications and manage a
-networking rolodex of contacts with interaction history. Companies tie the two
-together: a company page shows the jobs you applied to there plus the contacts
-associated with it.
+networking rolodex of contacts with interaction history, plus an analytics tab
+that charts the pipeline. Companies tie the two together: a company page shows
+the jobs you applied to there plus the contacts associated with it.
 
 **Local-only by design.** The app binds to `127.0.0.1`, there is no auth, and it
 talks to no external APIs. Your data lives in a local SQLite file that is
@@ -52,10 +52,13 @@ Then open <http://127.0.0.1:3000>.
 ## Project layout
 
 ```
-app/                 App Router pages (dashboard, applications, contacts, companies, settings)
-components/           Reusable UI (added in later shots)
+app/                 App Router pages (dashboard, applications, contacts, companies, analytics, settings)
+components/           Reusable UI; hand-rolled SVG charts in components/charts/
 lib/db.ts            Prisma client singleton
+lib/enums.ts         Enum option lists + display labels (enumLabel)
 lib/staleness.ts     Follow-up / staleness helpers
+lib/analytics.ts     Pure aggregation helpers for the analytics page
+lib/colors.ts        Status badge + chart color palette
 prisma/schema.prisma Full data model (Company, Application, Contact, Interaction, Settings)
 prisma/seed.ts       Fake demo data
 data/                Local SQLite DB (gitignored, created at runtime)

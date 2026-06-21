@@ -18,8 +18,8 @@ export default async function SettingsPage({
         <p className="eyebrow">Field kit</p>
         <h1 className="page-title mt-1">Settings</h1>
         <p className="mt-2 max-w-prose text-sm text-moss">
-          Staleness thresholds drive the dashboard follow-up widgets and the
-          blaze on overdue contacts.
+          Staleness thresholds drive the blaze on quiet applications in the
+          dashboard&rsquo;s awaiting list and on overdue contacts.
         </p>
       </div>
 

@@ -33,6 +33,7 @@ function applicationData(formData: FormData) {
     jobTitle,
     companyId,
     status,
+    reachedInterview: formData.get("reachedInterview") != null,
     dateApplied: parseDateInput(formData.get("dateApplied")),
     platform: str(formData.get("platform")),
     employmentType: asEnum<EmploymentType>(
