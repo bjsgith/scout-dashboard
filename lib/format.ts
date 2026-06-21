@@ -19,7 +19,12 @@ export function toDateInputValue(
   if (!date) return "";
   const d = typeof date === "string" ? new Date(date) : date;
   if (Number.isNaN(d.getTime())) return "";
-  return d.toISOString().slice(0, 10);
+  // Build from local components (not UTC) to mirror parseDateInput's local-noon
+  // convention — toISOString() would roll the calendar day at far-east offsets.
+  const year = d.getFullYear();
+  const month = String(d.getMonth() + 1).padStart(2, "0");
+  const day = String(d.getDate()).padStart(2, "0");
+  return `${year}-${month}-${day}`;
 }
 
 /**

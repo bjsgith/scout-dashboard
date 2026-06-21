@@ -18,11 +18,14 @@ export default function DataTable<T>({
   rows,
   columns,
   rowHref,
+  keyOf,
   emptyMessage = "Nothing here yet.",
 }: {
   rows: T[];
   columns: Column<T>[];
   rowHref?: (row: T) => string;
+  /** Stable key per row; defaults to array index. Provide for sortable tables. */
+  keyOf?: (row: T) => string | number;
   emptyMessage?: string;
 }) {
   const router = useRouter();
@@ -99,7 +102,7 @@ export default function DataTable<T>({
               const href = rowHref?.(row);
               return (
                 <tr
-                  key={i}
+                  key={keyOf ? keyOf(row) : i}
                   onClick={href ? () => router.push(href) : undefined}
                   className={
                     href
