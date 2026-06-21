@@ -1,0 +1,119 @@
+// Full data model for the Job Search Dashboard.
+// ALL models/enums are defined here in shot 1 so later shots never touch migrations.
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = env("DATABASE_URL")
+}
+
+enum ApplicationStatus {
+  Saved
+  Applied
+  Interviewing
+  Offer
+  Accepted
+  Rejected
+  Withdrawn
+}
+
+enum EmploymentType {
+  FullTime
+  PartTime
+  Internship
+  Contract
+  Temporary
+}
+
+enum WorkMode {
+  InPerson
+  Remote
+  Hybrid
+}
+
+enum InteractionType {
+  Call
+  Email
+  Coffee
+  LinkedIn
+  Meeting
+  Other
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  website   String?
+  industry  String?
+  location  String?
+  notes     String?
+  createdAt DateTime @default(now())
+
+  applications Application[]
+  contacts     Contact[]
+}
+
+model Application {
+  id             String            @id @default(cuid())
+  jobTitle       String
+  companyId      String
+  company        Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
+  status         ApplicationStatus @default(Saved)
+  dateApplied    DateTime?
+  platform       String?
+  employmentType EmploymentType?
+  city           String?
+  state          String?
+  workMode       WorkMode?
+  pay            String?
+  jobUrl         String?
+  notes          String?
+  followUpDate   DateTime?
+  lastActivityAt DateTime          @default(now())
+  createdAt      DateTime          @default(now())
+  updatedAt      DateTime          @updatedAt
+
+  contacts Contact[] @relation("ApplicationContacts")
+
+  @@index([companyId])
+  @@index([status])
+}
+
+model Contact {
+  id          String   @id @default(cuid())
+  name        String
+  title       String?
+  companyId   String?
+  company     Company? @relation(fields: [companyId], references: [id], onDelete: SetNull)
+  email       String?
+  phone       String?
+  linkedinUrl String?
+  notes       String?
+  createdAt   DateTime @default(now())
+
+  interactions Interaction[]
+  applications Application[] @relation("ApplicationContacts")
+
+  @@index([companyId])
+}
+
+model Interaction {
+  id        String          @id @default(cuid())
+  contactId String
+  contact   Contact         @relation(fields: [contactId], references: [id], onDelete: Cascade)
+  date      DateTime        @default(now())
+  type      InteractionType @default(Other)
+  notes     String?
+  createdAt DateTime        @default(now())
+
+  @@index([contactId])
+}
+
+model Settings {
+  id                  Int @id @default(1)
+  applicationStaleDays Int @default(7)
+  contactStaleDays     Int @default(30)
+}

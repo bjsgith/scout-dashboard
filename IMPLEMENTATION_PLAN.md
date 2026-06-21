@@ -113,3 +113,11 @@ Each may optionally be delegated to its own subagent (foundation → core → ne
 - Set a stale threshold low in Settings; confirm the dashboard follow-up widget flags the right items.
 - `git status` / `git check-ignore data/jobsearch.db .env` — confirm DB and env are ignored and nothing personal is staged.
 - Confirm the server is bound to localhost only (not reachable from another device).
+
+## Implementation notes / deviations
+- **Shot 1 — `DATABASE_URL` path:** Prisma resolves SQLite relative paths against the
+  `prisma/schema.prisma` directory, so the planned `file:./data/jobsearch.db` would place the
+  DB at `prisma/data/` rather than the repo-root `data/` referenced by the README, `.gitignore`
+  (`/data/`), and file-structure diagram. `.env.example` now uses `file:../data/jobsearch.db` so
+  the DB lands at the documented repo-root `data/`. It is gitignored by both `/data/` and `*.db`;
+  net effect matches the plan's intent, only the literal env string differs.
