@@ -59,6 +59,7 @@ export default function ContactsTable({ rows }: { rows: ContactRow[] }) {
       rows={rows}
       columns={columns}
       rowHref={(r) => `/contacts/${r.id}`}
+      rowLabel={(r) => r.name}
       keyOf={(r) => r.id}
       emptyMessage="No contacts yet. Add your first one."
     />

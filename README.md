@@ -41,8 +41,9 @@ Then open <http://127.0.0.1:3000>.
 
 ## Data & privacy
 
-- The SQLite database (`DATABASE_URL` in `.env`, default `file:./data/jobsearch.db`)
-  is **gitignored** — your real data never enters git.
+- The SQLite database (`DATABASE_URL` in `.env`, default `file:../data/jobsearch.db`,
+  which resolves to the repo-root `data/` directory) is **gitignored** — your real
+  data never enters git.
 - `.env` is gitignored; only `.env.example` is committed.
 - The server binds to localhost only, so it is not reachable from other devices.
 - No authentication is implemented, by design, since the app is single-user and

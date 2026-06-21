@@ -50,6 +50,7 @@ export default function CompaniesTable({ rows }: { rows: CompanyRow[] }) {
       rows={rows}
       columns={columns}
       rowHref={(r) => `/companies/${r.id}`}
+      rowLabel={(r) => r.name}
       keyOf={(r) => r.id}
       emptyMessage="No companies yet. Add your first one."
     />

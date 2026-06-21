@@ -2,7 +2,7 @@ import Link from "next/link";
 import { prisma } from "@/lib/db";
 import StatusBadge from "@/components/StatusBadge";
 import { getSettings } from "@/lib/settings";
-import { lastSpoken, isStale, daysSince } from "@/lib/staleness";
+import { lastSpoken, isStale, isFollowUpDue, daysSince } from "@/lib/staleness";
 import { formatDate } from "@/lib/format";
 import { APPLICATION_STATUSES } from "@/lib/enums";
 
@@ -29,11 +29,13 @@ export default async function DashboardPage() {
   const counts = new Map<string, number>();
   for (const a of apps) counts.set(a.status, (counts.get(a.status) ?? 0) + 1);
 
-  // Follow-up widget: open applications gone stale.
+  // Follow-up widget: open applications that have either gone stale (no activity)
+  // or have reached an explicit follow-up date.
   const staleApps = apps.filter(
     (a) =>
       !TERMINAL_STATUSES.has(a.status) &&
-      isStale(a.lastActivityAt, settings.applicationStaleDays)
+      (isStale(a.lastActivityAt, settings.applicationStaleDays) ||
+        isFollowUpDue(a.followUpDate))
   );
 
   // Follow-up widget: contacts not spoken to recently.
@@ -125,7 +127,8 @@ export default async function DashboardPage() {
             </span>
           </div>
           <p className="text-xs text-moss-light">
-            Open, no activity in {settings.applicationStaleDays}+ days.
+            Open, no activity in {settings.applicationStaleDays}+ days or past a
+            set follow-up date.
           </p>
           {staleApps.length === 0 ? (
             <p className="card p-4 text-sm text-moss-light">
@@ -135,6 +138,7 @@ export default async function DashboardPage() {
             <ul className="card divide-y divide-sage/70 overflow-hidden border-l-2 border-l-rust">
               {staleApps.map((a) => {
                 const days = daysSince(a.lastActivityAt);
+                const dueByDate = isFollowUpDue(a.followUpDate);
                 return (
                   <li key={a.id}>
                     <Link
@@ -147,7 +151,9 @@ export default async function DashboardPage() {
                         </div>
                         <div className="text-xs text-moss">
                           {a.company.name}
-                          {days !== null && ` · ${days}d since activity`}
+                          {dueByDate
+                            ? ` · follow-up due ${formatDate(a.followUpDate)}`
+                            : days !== null && ` · ${days}d since activity`}
                         </div>
                       </div>
                       <StatusBadge status={a.status} />

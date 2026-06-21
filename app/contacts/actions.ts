@@ -4,21 +4,8 @@ import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
 import { parseDateInput } from "@/lib/format";
+import { str, asEnum, url } from "@/lib/form";
 import { INTERACTION_TYPES, type InteractionType } from "@/lib/enums";
-
-function str(value: FormDataEntryValue | null): string | null {
-  if (value == null) return null;
-  const s = String(value).trim();
-  return s === "" ? null : s;
-}
-
-function asEnum<T extends string>(
-  value: FormDataEntryValue | null,
-  allowed: readonly T[]
-): T | null {
-  const s = str(value);
-  return s && (allowed as readonly string[]).includes(s) ? (s as T) : null;
-}
 
 function contactData(formData: FormData) {
   const name = str(formData.get("name"));
@@ -29,7 +16,7 @@ function contactData(formData: FormData) {
     companyId: str(formData.get("companyId")),
     email: str(formData.get("email")),
     phone: str(formData.get("phone")),
-    linkedinUrl: str(formData.get("linkedinUrl")),
+    linkedinUrl: url(formData.get("linkedinUrl")),
     notes: str(formData.get("notes")),
   };
 }

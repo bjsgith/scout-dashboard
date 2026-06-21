@@ -107,6 +107,7 @@ export default function ApplicationsTable({ rows }: { rows: AppRow[] }) {
         rows={filtered}
         columns={columns}
         rowHref={(r) => `/applications/${r.id}`}
+        rowLabel={(r) => `${r.jobTitle} at ${r.companyName}`}
         keyOf={(r) => r.id}
         emptyMessage="No applications match this filter."
       />

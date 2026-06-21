@@ -3,19 +3,14 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { prisma } from "@/lib/db";
-
-function str(value: FormDataEntryValue | null): string | null {
-  if (value == null) return null;
-  const s = String(value).trim();
-  return s === "" ? null : s;
-}
+import { str, url } from "@/lib/form";
 
 function companyData(formData: FormData) {
   const name = str(formData.get("name"));
   if (!name) throw new Error("Company name is required.");
   return {
     name,
-    website: str(formData.get("website")),
+    website: url(formData.get("website")),
     industry: str(formData.get("industry")),
     location: str(formData.get("location")),
     notes: str(formData.get("notes")),

@@ -39,6 +39,9 @@ There is no test suite. After editing `prisma/schema.prisma`, run `npm run db:mi
 
 - **Shared helpers (use these, don't reinvent):**
   - `lib/db.ts` — Prisma client singleton (`import { prisma } from "@/lib/db"`).
+  - `lib/form.ts` — Server Action `FormData` parsers: `str` (trim→null), `asEnum`
+    (whitelist a value against an enum), `url` (normalize to a safe http(s) URL or
+    null, rejecting `javascript:`/`data:`). Use these in every `actions.ts`.
   - `lib/staleness.ts` — `isStale`, `isFollowUpDue`, `lastSpoken`, `daysSince`. "Last spoken"
     for a contact is always derived from `max(interaction.date)`, never stored.
   - `lib/settings.ts` — `getSettings()` upserts the single pinned `Settings` row (id=1) holding

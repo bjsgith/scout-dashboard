@@ -18,12 +18,15 @@ export default function DataTable<T>({
   rows,
   columns,
   rowHref,
+  rowLabel,
   keyOf,
   emptyMessage = "Nothing here yet.",
 }: {
   rows: T[];
   columns: Column<T>[];
   rowHref?: (row: T) => string;
+  /** Accessible label for a clickable row (e.g. its name). Used for keyboard nav. */
+  rowLabel?: (row: T) => string;
   /** Stable key per row; defaults to array index. Provide for sortable tables. */
   keyOf?: (row: T) => string | number;
   emptyMessage?: string;
@@ -104,9 +107,22 @@ export default function DataTable<T>({
                 <tr
                   key={keyOf ? keyOf(row) : i}
                   onClick={href ? () => router.push(href) : undefined}
+                  role={href ? "link" : undefined}
+                  tabIndex={href ? 0 : undefined}
+                  aria-label={href ? rowLabel?.(row) : undefined}
+                  onKeyDown={
+                    href
+                      ? (e) => {
+                          if (e.key === "Enter" || e.key === " ") {
+                            e.preventDefault();
+                            router.push(href);
+                          }
+                        }
+                      : undefined
+                  }
                   className={
                     href
-                      ? "cursor-pointer transition-colors hover:bg-paper-sunk/60"
+                      ? "cursor-pointer transition-colors hover:bg-paper-sunk/60 focus:outline-none focus-visible:bg-paper-sunk/60 focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-rust"
                       : undefined
                   }
                 >
