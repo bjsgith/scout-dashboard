@@ -115,7 +115,7 @@ async function main() {
     data: {
       jobTitle: "Backend Engineer",
       companyId: globex.id,
-      status: "Applied",
+      status: "Active",
       dateApplied: daysAgo(12),
       platform: "LinkedIn",
       employmentType: "FullTime",
@@ -134,7 +134,7 @@ async function main() {
     data: {
       jobTitle: "Platform Engineer",
       companyId: initech.id,
-      status: "Applied",
+      status: "Active",
       dateApplied: daysAgo(2),
       platform: "Hacker News",
       employmentType: "Contract",

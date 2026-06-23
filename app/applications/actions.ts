@@ -22,7 +22,7 @@ function applicationData(formData: FormData) {
 
   const status =
     asEnum<ApplicationStatus>(formData.get("status"), APPLICATION_STATUSES) ??
-    "Applied";
+    "Active";
 
   const contactIds = formData
     .getAll("contactIds")

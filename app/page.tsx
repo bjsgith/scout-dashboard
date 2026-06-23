@@ -7,7 +7,7 @@ import { getSettings } from "@/lib/settings";
 import { APPLICATION_STATUSES, enumLabel } from "@/lib/enums";
 
 // Open statuses still waiting on the other side to respond.
-const AWAITING_STATUSES = new Set(["Applied", "Interviewing"]);
+const AWAITING_STATUSES = new Set(["Active", "Interviewing"]);
 
 export default async function DashboardPage() {
   const [apps, settings] = await Promise.all([

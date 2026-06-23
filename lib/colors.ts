@@ -7,7 +7,7 @@ import type { ApplicationStatus } from "@/lib/enums";
 // light coloring so a status reads at a glance: blue = in the queue, greens =
 // advancing / won, amber = decision pending, red = lost, gray = inactive.
 export const STATUS_BADGE: Record<ApplicationStatus, string> = {
-  Applied: "bg-[#CFE0F0] text-[#235581] ring-[#A9C8E4]", // blue — submitted, waiting
+  Active: "bg-[#CFE0F0] text-[#235581] ring-[#A9C8E4]", // blue — submitted, waiting
   Interviewing: "bg-[#D4EBC2] text-[#3C6B1F] ring-[#B2D89B]", // green — advancing
   Offer: "bg-[#F6E0A6] text-[#86570E] ring-[#E7C97D]", // amber-gold — decision pending
   Accepted: "bg-[#B6DFB4] text-[#1C5A28] ring-[#8CC58B]", // deep green — won / summit
@@ -21,7 +21,7 @@ export const STATUS_BADGE_FALLBACK = "bg-[#E8E4D6] text-[#6B6550] ring-[#D6D1BD]
 // Solid fill hex per status — the darker companion to each badge tint, tuned
 // to read clearly as chart segments against the paper surfaces.
 export const STATUS_FILL: Record<ApplicationStatus, string> = {
-  Applied: "#5E8F8C", // lake
+  Active: "#5E8F8C", // lake
   Interviewing: "#C99A3A", // amber
   Offer: "#6E9A57", // fern
   Accepted: "#2F6B3D", // pine summit

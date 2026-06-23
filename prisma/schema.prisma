@@ -11,7 +11,7 @@ datasource db {
 }
 
 enum ApplicationStatus {
-  Applied
+  Active
   Interviewing
   Offer
   Accepted
@@ -62,7 +62,7 @@ model Application {
   jobTitle         String
   companyId        String
   company          Company           @relation(fields: [companyId], references: [id], onDelete: Cascade)
-  status           ApplicationStatus @default(Applied)
+  status           ApplicationStatus @default(Active)
   reachedInterview Boolean           @default(false)
   dateApplied      DateTime?
   platform         String?

@@ -61,10 +61,10 @@ export function rates(apps: AppLike[]) {
   const total = apps.length;
   const by = (s: string) => apps.filter((a) => a.status === s).length;
   const active = apps.filter((a) => !TERMINAL_STATUSES.has(a.status)).length;
-  // "Responded" = the search moved past the initial applied stage. An assumed-
+  // "Responded" = the search moved past the initial active stage. An assumed-
   // stale lead never got a reply, so it doesn't count as a response.
   const responded = apps.filter(
-    (a) => a.status !== "Applied" && a.status !== "AssumedStale"
+    (a) => a.status !== "Active" && a.status !== "AssumedStale"
   ).length;
   const offers = by("Offer") + by("Accepted");
   const reached = apps.filter(reachedInterviewStage).length;
@@ -106,7 +106,7 @@ export function conversionFunnel(apps: AppLike[]): { label: string; value: numbe
   ).length;
   const accepted = apps.filter((a) => a.status === "Accepted").length;
   return [
-    { label: "Applied", value: apps.length },
+    { label: "Active", value: apps.length },
     { label: "Interviewed", value: interviewed },
     { label: "Offer", value: offer },
     { label: "Accepted", value: accepted },

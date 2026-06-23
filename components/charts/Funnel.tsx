@@ -1,4 +1,4 @@
-// Pipeline funnel — centered bars showing how leads narrow from Applied
+// Pipeline funnel — centered bars showing how leads narrow from Active
 // through Accepted, with the conversion rate from the top of the funnel at each
 // stage.
 import { statusFill } from "@/lib/colors";

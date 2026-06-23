@@ -111,7 +111,7 @@ export default async function AnalyticsPage() {
             <StatTile
               value={`${r.responseRate}%`}
               label="Response rate"
-              hint="past applied"
+              hint="past active"
             />
             <StatTile
               value={`${r.interviewRate}%`}
