@@ -63,7 +63,7 @@ async function main() {
       title: "Engineering Manager",
       companyId: acme.id,
       email: "dana.reyes@acme.example.com",
-      linkedinUrl: "https://linkedin.com/in/dana-reyes",
+      linkedinUrl: "https://example.com/in/dana-reyes",
       notes: "Warm intro via a former coworker.",
     },
   });
@@ -84,7 +84,7 @@ async function main() {
       name: "Jordan Lee",
       title: "Senior Engineer",
       companyId: initech.id,
-      linkedinUrl: "https://linkedin.com/in/jordan-lee",
+      linkedinUrl: "https://example.com/in/jordan-lee",
       notes: "Potential referral for the backend role.",
     },
   });
