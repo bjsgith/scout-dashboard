@@ -51,6 +51,23 @@ function applicationData(formData: FormData) {
   };
 }
 
+function revalidateApplicationViews({
+  id,
+  companyIds = [],
+}: {
+  id?: string;
+  companyIds?: Array<string | null | undefined>;
+}) {
+  revalidatePath("/");
+  revalidatePath("/applications");
+  revalidatePath("/analytics");
+  if (id) revalidatePath(`/applications/${id}`);
+
+  for (const companyId of new Set(companyIds.filter(Boolean))) {
+    revalidatePath(`/companies/${companyId}`);
+  }
+}
+
 export async function createApplication(formData: FormData) {
   const { contactIds, ...data } = applicationData(formData);
   const app = await prisma.application.create({
@@ -60,13 +77,16 @@ export async function createApplication(formData: FormData) {
       contacts: { connect: contactIds.map((id) => ({ id })) },
     },
   });
-  revalidatePath("/applications");
-  revalidatePath(`/companies/${data.companyId}`);
+  revalidateApplicationViews({ id: app.id, companyIds: [data.companyId] });
   redirect(`/applications/${app.id}`);
 }
 
 export async function updateApplication(id: string, formData: FormData) {
   const { contactIds, ...data } = applicationData(formData);
+  const prev = await prisma.application.findUnique({
+    where: { id },
+    select: { companyId: true },
+  });
   await prisma.application.update({
     where: { id },
     data: {
@@ -76,15 +96,15 @@ export async function updateApplication(id: string, formData: FormData) {
       contacts: { set: contactIds.map((cid) => ({ id: cid })) },
     },
   });
-  revalidatePath("/applications");
-  revalidatePath(`/applications/${id}`);
-  revalidatePath(`/companies/${data.companyId}`);
+  revalidateApplicationViews({
+    id,
+    companyIds: [prev?.companyId, data.companyId],
+  });
   redirect(`/applications/${id}`);
 }
 
 export async function deleteApplication(id: string) {
   const app = await prisma.application.delete({ where: { id } });
-  revalidatePath("/applications");
-  revalidatePath(`/companies/${app.companyId}`);
+  revalidateApplicationViews({ companyIds: [app.companyId] });
   redirect("/applications");
 }

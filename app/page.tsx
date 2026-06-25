@@ -6,6 +6,10 @@ import { formatDate } from "@/lib/format";
 import { getSettings } from "@/lib/settings";
 import { APPLICATION_STATUSES, enumLabel } from "@/lib/enums";
 
+// Local single-user dashboard: always render fresh so new data and
+// date-based staleness never serve from the Full Route Cache.
+export const dynamic = "force-dynamic";
+
 // Open statuses still waiting on the other side to respond.
 const AWAITING_STATUSES = new Set(["Active", "Interviewing"]);
 

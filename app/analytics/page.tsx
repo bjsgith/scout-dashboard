@@ -23,6 +23,10 @@ export const metadata = {
   title: "Analytics · Scout",
 };
 
+// Local single-user dashboard: always render fresh so new data and
+// date-based staleness never serve from the Full Route Cache.
+export const dynamic = "force-dynamic";
+
 export default async function AnalyticsPage() {
   const [apps, interactions] = await Promise.all([
     prisma.application.findMany({
