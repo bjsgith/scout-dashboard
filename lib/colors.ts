@@ -7,46 +7,46 @@ import type { ApplicationStatus } from "@/lib/enums";
 // light coloring so a status reads at a glance: blue = in the queue, greens =
 // advancing / won, amber = decision pending, red = lost, gray = inactive.
 export const STATUS_BADGE: Record<ApplicationStatus, string> = {
-  Active: "bg-[#CFE0F0] text-[#235581] ring-[#A9C8E4]", // blue — submitted, waiting
-  Interviewing: "bg-[#D4EBC2] text-[#3C6B1F] ring-[#B2D89B]", // green — advancing
-  Offer: "bg-[#F6E0A6] text-[#86570E] ring-[#E7C97D]", // amber-gold — decision pending
-  Accepted: "bg-[#B6DFB4] text-[#1C5A28] ring-[#8CC58B]", // deep green — won / summit
-  Rejected: "bg-[#F3CDC5] text-[#9C281A] ring-[#E2A89B]", // red — lost
-  Withdrawn: "bg-[#E2E0DA] text-[#6D695F] ring-[#CECABE]", // gray — inactive
-  AssumedStale: "bg-[#E7DAC4] text-[#7C6A45] ring-[#D6C4A4]", // dusty tan — gone quiet
+  Active: "bg-[#15374C] text-[#9DCBEA] ring-[#22506C]", // blue — submitted, waiting
+  Interviewing: "bg-[#1B3D2A] text-[#9ED9A8] ring-[#2A5A3D]", // green — advancing
+  Offer: "bg-[#433014] text-[#F0C674] ring-[#65471F]", // amber-gold — decision pending
+  Accepted: "bg-[#14432A] text-[#7FD69B] ring-[#1F6440]", // deep green — won / summit
+  Rejected: "bg-[#4A1F1A] text-[#F0A392] ring-[#6E2E25]", // red — lost
+  Withdrawn: "bg-[#22323A] text-[#9BAAB2] ring-[#33474F]", // gray — inactive
+  AssumedStale: "bg-[#3A3226] text-[#D3BC93] ring-[#544937]", // dusty tan — gone quiet
 };
 
-export const STATUS_BADGE_FALLBACK = "bg-[#E8E4D6] text-[#6B6550] ring-[#D6D1BD]";
+export const STATUS_BADGE_FALLBACK = "bg-[#22323A] text-[#93A4AC] ring-[#33474F]";
 
-// Solid fill hex per status — the darker companion to each badge tint, tuned
-// to read clearly as chart segments against the paper surfaces.
+// Solid fill hex per status — the brighter companion to each badge tint, tuned
+// to read clearly as chart segments against the deep-water surfaces.
 export const STATUS_FILL: Record<ApplicationStatus, string> = {
-  Active: "#5E8F8C", // lake
-  Interviewing: "#C99A3A", // amber
-  Offer: "#6E9A57", // fern
-  Accepted: "#2F6B3D", // pine summit
-  Rejected: "#A8482A", // rust / clay
-  Withdrawn: "#B4AE9E", // faded
-  AssumedStale: "#B79B6C", // dusty tan — gone quiet
+  Active: "#5FB3C4", // shoal
+  Interviewing: "#E2AE4E", // lantern
+  Offer: "#8FCB6E", // kelp
+  Accepted: "#46A45C", // deep kelp
+  Rejected: "#E4694A", // coral
+  Withdrawn: "#6E8593", // slate
+  AssumedStale: "#C2A272", // dusty tan — gone quiet
 };
 
 export function statusFill(status: string): string {
-  return STATUS_FILL[status as ApplicationStatus] ?? "#A7A088";
+  return STATUS_FILL[status as ApplicationStatus] ?? "#7E8F98";
 }
 
-// Field Log accent ramp (sage → rust) for choropleth / density shading.
-export const RAMP = ["#ECE7D8", "#D7DBC6", "#C3C9AE", "#9DA889", "#A8482A"];
+// Density ramp (deep water → coral) for choropleth / density shading.
+export const RAMP = ["#12303C", "#1C4A5C", "#2E6E80", "#4E97A6", "#E4694A"];
 
 // Neutral surfaces & accents pulled from tailwind.config.js for SVG use.
 export const INK = {
-  pine: "#22372B",
-  moss: "#54624E",
-  mossLight: "#7C8B73",
-  sage: "#D7DBC6",
-  sageDeep: "#9DA889",
-  rust: "#A8482A",
-  rustSoft: "#EDDBCF",
-  paper: "#F3EFE4",
-  paperRaised: "#FBF9F1",
-  paperSunk: "#ECE7D8",
+  pine: "#E8F3F4",
+  moss: "#93AEB9",
+  mossLight: "#7E9CAA",
+  sage: "#1D3E4C",
+  sageDeep: "#5E93A6",
+  rust: "#E4694A",
+  rustSoft: "#3B211A",
+  paper: "#0B1E27",
+  paperRaised: "#12303B",
+  paperSunk: "#071720",
 } as const;

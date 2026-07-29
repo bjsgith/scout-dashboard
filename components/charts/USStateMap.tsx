@@ -1,12 +1,12 @@
 // US application-density map, drawn as a tile-grid cartogram (one labeled
-// square per state). Tiles shade from sage (few) to rust (many) by application
-// count; states with none stay on the sunk-paper base. Fully server-rendered
+// square per state). Tiles shade from shoal (few) to coral (many) by application
+// count; states with none stay on the sunk base. Fully server-rendered
 // SVG from bundled coordinates — no geocoding, no external assets.
 import { INK } from "@/lib/colors";
 import { STATE_TILES, GRID_COLS, GRID_ROWS } from "@/lib/us-states";
 
-// Sage → rust density ramp for states that have at least one application.
-const DENSITY = ["#C7CFB2", "#A9B58C", "#C98A5E", "#B55E37", "#A8482A"];
+// Shoal → coral density ramp for states that have at least one application.
+const DENSITY = ["#2A5F71", "#3E8296", "#7FA88E", "#C8894F", "#E4694A"];
 
 export default function USStateMap({
   counts,
@@ -29,9 +29,11 @@ export default function USStateMap({
     return DENSITY[idx];
   }
 
-  function isDark(count: number): boolean {
+  // The ramp runs dark → light, so the busiest tiles are the pale ones and it's
+  // those that need dark ink. Everything below the midpoint stays light-on-dark.
+  function needsDarkInk(count: number): boolean {
     if (count <= 0 || max <= 0) return false;
-    return Math.round((count / max) * (DENSITY.length - 1)) >= 3;
+    return Math.round((count / max) * (DENSITY.length - 1)) >= 2;
   }
 
   if (total === 0) {
@@ -57,7 +59,7 @@ export default function USStateMap({
           const count = counts.get(t.abbr) ?? 0;
           const x = t.col * pitch;
           const y = t.row * pitch;
-          const dark = isDark(count);
+          const darkInk = needsDarkInk(count);
           return (
             <g key={t.abbr}>
               <rect
@@ -78,7 +80,7 @@ export default function USStateMap({
                 style={{
                   fontSize: 11,
                   fontWeight: 600,
-                  fill: dark ? INK.paperRaised : INK.pine,
+                  fill: darkInk ? INK.paperRaised : INK.pine,
                 }}
               >
                 {t.abbr}
@@ -91,7 +93,7 @@ export default function USStateMap({
                   dominantBaseline="middle"
                   style={{
                     fontSize: 10,
-                    fill: dark ? INK.paperRaised : INK.moss,
+                    fill: darkInk ? INK.paperRaised : INK.moss,
                   }}
                 >
                   {count}
