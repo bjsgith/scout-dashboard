@@ -31,7 +31,7 @@ export default function RootLayout({
       <body className="font-sans">
         <div className="flex min-h-screen flex-col">
           <header className="topo border-b border-sage-dark bg-paper-raised/80 backdrop-blur-sm">
-            <div className="mx-auto max-w-6xl px-4">
+            <div className="shell">
               <div className="flex min-h-16 flex-wrap items-center justify-between gap-x-4 gap-y-1 py-2">
                 <Link
                   href="/"
@@ -66,11 +66,11 @@ export default function RootLayout({
               </div>
             </div>
           </header>
-          <main className="mx-auto w-full max-w-6xl flex-1 px-4 py-10">
+          <main className="shell flex-1 py-10">
             {children}
           </main>
           <footer className="border-t border-sage-dark bg-paper-raised">
-            <div className="mx-auto flex max-w-6xl flex-wrap items-center gap-x-2 gap-y-1 px-4 py-4 text-xs text-moss">
+            <div className="shell flex flex-wrap items-center gap-x-2 gap-y-1 py-4 text-xs text-moss">
               <span className="blaze !h-2.5 !w-1.5" aria-hidden />
               <span className="font-display uppercase tracking-[0.14em]">
                 Field log

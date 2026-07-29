@@ -36,6 +36,14 @@ body {
     @apply font-display text-xl font-medium uppercase tracking-[0.06em] text-pine;
   }
 
+  /* Layout --------------------------------------------------------------- */
+  /* The page shell. Fluid so the content fills a wide viewport — including a
+     large monitor read at 50% browser zoom, which doubles the CSS width —
+     with a ceiling so it never sprawls at extreme zoom-out. */
+  .shell {
+    @apply mx-auto w-full max-w-[2800px] px-4 sm:px-6 xl:px-8 3xl:px-12;
+  }
+
   /* Surfaces ------------------------------------------------------------- */
   .card {
     @apply rounded-lg border border-sage bg-paper-raised shadow-card;

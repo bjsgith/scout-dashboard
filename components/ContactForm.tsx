@@ -62,7 +62,7 @@ export default function ContactForm({
   }
 
   return (
-    <form action={action} className="max-w-xl space-y-5">
+    <form action={action} className="space-y-5">
       <TextField
         label="Name"
         name="name"

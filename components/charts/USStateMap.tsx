@@ -49,7 +49,9 @@ export default function USStateMap({
         viewBox={`0 0 ${w} ${h}`}
         role="img"
         aria-label="Application density by state"
-        className="w-full"
+        // Scales proportionally, so it needs a ceiling — on a wide viewport an
+        // uncapped map would grow as tall as it is wide.
+        className="mx-auto w-full max-w-[900px]"
       >
         {STATE_TILES.map((t) => {
           const count = counts.get(t.abbr) ?? 0;

@@ -6,6 +6,13 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Room to grow on large monitors — the app is often read zoomed out,
+      // which widens the CSS viewport well past Tailwind's default ceiling.
+      screens: {
+        "2xl": "1600px",
+        "3xl": "2000px",
+        "4xl": "2560px",
+      },
       colors: {
         // Warm daylight paper — the page and its surfaces.
         paper: {

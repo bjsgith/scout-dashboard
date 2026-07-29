@@ -13,7 +13,7 @@ export default async function SettingsPage({
   ]);
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-xl space-y-6">
       <div>
         <p className="eyebrow">Field kit</p>
         <h1 className="page-title mt-1">Settings</h1>
@@ -30,7 +30,7 @@ export default async function SettingsPage({
         </p>
       )}
 
-      <form action={updateSettings} className="card max-w-md space-y-5 p-6">
+      <form action={updateSettings} className="card space-y-5 p-6">
         <TextField
           label="Application stale after (days)"
           name="applicationStaleDays"

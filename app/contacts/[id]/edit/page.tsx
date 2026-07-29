@@ -21,7 +21,7 @@ export default async function EditContactPage({
   if (!contact) notFound();
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-xl space-y-6">
       <div>
         <Link
           href={`/contacts/${contact.id}`}

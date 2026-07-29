@@ -49,7 +49,9 @@ export default function TrendLine({
       viewBox={`0 0 ${w} ${h}`}
       role="img"
       aria-label="Monthly trend"
-      className="w-full"
+      // Only the width is constrained, so the height follows the viewBox — cap
+      // it or a wide viewport would scale the chart absurdly tall.
+      className="mx-auto w-full max-w-[1100px]"
       preserveAspectRatio="none"
     >
       {/* baseline */}

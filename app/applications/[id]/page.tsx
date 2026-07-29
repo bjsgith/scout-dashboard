@@ -114,7 +114,7 @@ export default async function ApplicationDetailPage({
       </div>
 
       {fields.length > 0 && (
-        <dl className="card grid grid-cols-2 gap-x-6 gap-y-4 p-5 sm:grid-cols-3">
+        <dl className="card grid grid-cols-2 gap-x-6 gap-y-4 p-5 sm:grid-cols-3 xl:grid-cols-4 3xl:grid-cols-6">
           {fields.map((f) => (
             <div key={f.label}>
               <dt className="font-display text-[0.7rem] font-medium uppercase tracking-[0.1em] text-moss-light">

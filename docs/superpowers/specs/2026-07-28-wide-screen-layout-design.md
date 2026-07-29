@@ -143,11 +143,15 @@ Two charts misbehave once their container can exceed ~1150px:
    the map becomes enormous vertically. Fix: cap it — wrap or add
    `mx-auto max-w-[900px]` to the svg's class.
 
-2. **`components/charts/TrendLine.tsx:49`** — uses `preserveAspectRatio="none"`, so it
-   stretches horizontally without growing taller (good), but its month labels and stroke
-   widths get horizontally distorted in proportion to the stretch. At 1150px the factor
-   is mild; at 2500px it is visibly wrong. Fix: raise the internal `w` constant so the
-   rendered width is closer to the intrinsic width, keeping the stretch factor near 1.
+2. **`components/charts/TrendLine.tsx:49`** — has `preserveAspectRatio="none"`, but since
+   only its *width* is constrained (`w-full`, height auto), the height still follows the
+   viewBox ratio and it scales uniformly — so there is no label distortion. Its actual
+   problem is the same as the map's: unbounded proportional growth in height. Fix:
+   `mx-auto max-w-[1100px]` on the svg.
+
+   *(Corrected during implementation — the original plan proposed raising the internal `w`
+   constant to counter a horizontal stretch that doesn't occur. That change would have made
+   the chart render much shorter than it does today.)*
 
 `DonutChart.tsx` uses fixed `width`/`height` attributes — it stays a fixed size and is
 fine as-is. `BarList` and `Funnel` are HTML/flex, not SVG — fine as-is.
@@ -169,7 +173,17 @@ fine as-is. `BarList` and `Funnel` are HTML/flex, not SVG — fine as-is.
 
 - **Redefining Tailwind's `2xl`** from 1536px to 1600px would silently shift any existing
   `2xl:` usage. Verified in Step 1 that there is none.
-- **`preserveAspectRatio="none"` on TrendLine** is a pre-existing distortion this change
-  amplifies rather than causes. Step 8 mitigates but does not fully eliminate it; a real
-  fix would be a resize-observer-driven width, which is out of scope for a layout pass.
-- No test suite exists (per `CLAUDE.md`), so verification is build + manual visual check.
+- No test suite exists (per `CLAUDE.md`), so verification is build + rendered-HTML checks
+  plus a manual visual pass at each zoom level.
+
+## Deviations from plan
+
+- **Step 3 (dashboard)** — rather than wrapping the two list sections in a new grid `div`
+  (which would have re-indented both sections for a large, noisy diff), the existing
+  page wrapper becomes the grid at `2xl` and the hero takes `2xl:col-span-2`. Same result,
+  three lines changed.
+- **Step 7 (forms)** — the width cap moved *up* to each page's wrapper `div` instead of
+  living on the form and being duplicated on the header block. The now-redundant
+  `max-w-*` was removed from `ApplicationForm`, `ContactForm`, `CompanyForm`, and the
+  settings form. Header and form stay aligned by construction.
+- **Step 8 (TrendLine)** — see the correction noted above.

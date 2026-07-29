@@ -49,10 +49,12 @@ export default async function DashboardPage() {
 
   const totalApps = apps.length;
 
+  // Stacked by default; on a wide viewport the two lists sit side by side
+  // under a full-width hero, so the dashboard reads without scrolling.
   return (
-    <div className="space-y-10">
+    <div className="space-y-10 2xl:grid 2xl:grid-cols-2 2xl:items-start 2xl:gap-10 2xl:space-y-0">
       {/* Trailhead — the hero. Your pipeline laid out like a ridge of markers. */}
-      <section className="topo card overflow-hidden">
+      <section className="topo card overflow-hidden 2xl:col-span-2">
         <div className="border-b border-sage px-6 py-6 sm:px-8">
           <p className="eyebrow">Scout · Field Log</p>
           <h1 className="page-title mt-1.5">Trailhead</h1>

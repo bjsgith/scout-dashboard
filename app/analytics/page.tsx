@@ -194,11 +194,12 @@ export default async function AnalyticsPage() {
               <span className="blaze" aria-hidden />
               <h2 className="section-title">Pace &amp; mix</h2>
             </div>
-            <div className="card space-y-2 p-5">
-              <h3 className="eyebrow">Applications over time</h3>
-              <TrendLine data={appliedTrend} color={INK.rust} />
-            </div>
-            <div className="grid gap-6 sm:grid-cols-2">
+            {/* Trend spans the row until there's width for all three abreast. */}
+            <div className="grid gap-6 sm:grid-cols-2 3xl:grid-cols-3">
+              <div className="card space-y-2 p-5 sm:col-span-2 3xl:col-span-1">
+                <h3 className="eyebrow">Applications over time</h3>
+                <TrendLine data={appliedTrend} color={INK.rust} />
+              </div>
               <div className="card space-y-3 p-5">
                 <h3 className="eyebrow">Work mode</h3>
                 <BarList
