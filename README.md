@@ -37,6 +37,7 @@ Then open <http://127.0.0.1:3000>.
 | `npm run build`     | Production build                            |
 | `npm run start`     | Production server, bound to `127.0.0.1`     |
 | `npm run lint`      | ESLint checks                               |
+| `npm test`          | Host-validation unit tests                  |
 | `npm run db:migrate`| `prisma migrate dev`                        |
 | `npm run db:seed`   | Load fake demo data                         |
 
@@ -49,6 +50,12 @@ Then open <http://127.0.0.1:3000>.
 - The server binds to localhost only, so it is not reachable from other devices.
 - No authentication is implemented, by design, since the app is single-user and
   local-only.
+- Requests are accepted only when the raw `Host` header is exactly
+  `127.0.0.1:<port>` or `localhost:<port>` (using `PORT`, or `3000` by default).
+  Reverse proxies, containers that expose Scout outside the host, tunnels, LAN
+  launches, and other non-loopback deployments are intentionally unsupported.
+- Under this intentional no-auth model, other processes running as the same local
+  user are trusted and may access Scout and its data.
 
 ## Project layout
 
