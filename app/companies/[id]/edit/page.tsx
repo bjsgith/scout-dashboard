@@ -14,7 +14,7 @@ export default async function EditCompanyPage({
   if (!company) notFound();
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-xl space-y-6">
       <div>
         <Link
           href={`/companies/${company.id}`}

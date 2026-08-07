@@ -80,7 +80,7 @@ export default function ApplicationForm({
   }
 
   return (
-    <form action={action} className="max-w-2xl space-y-5">
+    <form action={action} className="space-y-5">
       <TextField
         label="Job title"
         name="jobTitle"

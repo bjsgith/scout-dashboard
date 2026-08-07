@@ -4,7 +4,7 @@ import { createCompany } from "../actions";
 
 export default function NewCompanyPage() {
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-xl space-y-6">
       <div>
         <Link
           href="/companies"

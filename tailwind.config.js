@@ -6,44 +6,58 @@ module.exports = {
   ],
   theme: {
     extend: {
+      // Room to grow on large monitors — the app is often read zoomed out,
+      // which widens the CSS viewport well past Tailwind's default ceiling.
+      screens: {
+        "2xl": "1600px",
+        "3xl": "2000px",
+        "4xl": "2560px",
+      },
+      // Dark sea. The token names are inherited from the original daylight
+      // palette and kept deliberately — every class in the app references them,
+      // so the theme swaps by remapping values, not by renaming anything.
+      // Read them by role: paper = surfaces, pine = ink & primary action,
+      // moss = secondary text, sage = hairlines, rust = the accent.
       colors: {
-        // Warm daylight paper — the page and its surfaces.
+        // Deep water — the page and its surfaces, darkest to lit.
         paper: {
-          DEFAULT: "#F3EFE4",
-          raised: "#FBF9F1",
-          sunk: "#ECE7D8",
+          DEFAULT: "#0B1E27",
+          raised: "#12303B",
+          sunk: "#071720",
         },
-        // Deep forest ink + primary actions.
+        // Foam — primary text, and the fill of primary actions.
         pine: {
-          DEFAULT: "#22372B",
-          deep: "#1A2C21",
-          soft: "#3A5240",
+          DEFAULT: "#E8F3F4",
+          deep: "#C8E2E6",
+          soft: "#A5C7D0",
         },
-        // Muted green-grays for secondary text.
+        // Mist — secondary and tertiary text.
         moss: {
-          DEFAULT: "#54624E",
-          light: "#7C8B73",
+          DEFAULT: "#93AEB9",
+          light: "#7E9CAA",
         },
-        // Sage hairlines, borders, dividers.
+        // Shoal — hairlines, borders, dividers, and faded numerals.
         sage: {
-          DEFAULT: "#D7DBC6",
-          dark: "#C3C9AE",
-          deep: "#9DA889",
+          DEFAULT: "#1D3E4C",
+          dark: "#27505F",
+          deep: "#5E93A6",
         },
-        // The blaze — clay/rust accent, used sparingly.
+        // The blaze — a coral beacon against the teal, used sparingly.
         rust: {
-          DEFAULT: "#A8482A",
-          deep: "#8C3A20",
-          soft: "#EDDBCF",
+          DEFAULT: "#E4694A",
+          deep: "#F08265",
+          soft: "#3B211A",
         },
       },
       fontFamily: {
         display: ["var(--font-display)", "ui-sans-serif", "sans-serif"],
         sans: ["var(--font-body)", "ui-sans-serif", "system-ui", "sans-serif"],
       },
+      // Deeper and more opaque than the daylight original — on dark surfaces a
+      // 4% shadow reads as nothing.
       boxShadow: {
-        card: "0 1px 2px rgba(34, 55, 43, 0.04), 0 1px 12px rgba(34, 55, 43, 0.04)",
-        lift: "0 2px 4px rgba(34, 55, 43, 0.06), 0 8px 24px rgba(34, 55, 43, 0.08)",
+        card: "0 1px 2px rgba(2, 12, 18, 0.35), 0 1px 12px rgba(2, 12, 18, 0.25)",
+        lift: "0 2px 4px rgba(2, 12, 18, 0.4), 0 8px 24px rgba(2, 12, 18, 0.45)",
       },
     },
   },

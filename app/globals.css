@@ -3,25 +3,26 @@
 @tailwind utilities;
 
 :root {
-  color-scheme: light;
+  color-scheme: dark;
 }
 
 body {
   @apply bg-paper text-pine antialiased;
-  /* A whisper of warmth so the paper never reads as flat gray. */
+  /* Light filtering down through the water, so the deep never reads as flat black. */
   background-image: radial-gradient(
     120% 80% at 50% -10%,
-    rgba(157, 168, 137, 0.12),
+    rgba(94, 158, 178, 0.18),
     transparent 60%
   );
   background-attachment: fixed;
 }
 
 @layer components {
-  /* Faint topographic contour lines — the page's ambient nature texture.
-     Kept to a whisper; sits behind the masthead and the dashboard trailhead. */
+  /* Faint contour lines — now read as depth soundings rather than dry land.
+     Kept to a whisper; sits behind the masthead and the dashboard trailhead.
+     Stroke is light: the old dark ink was invisible on a dark surface. */
   .topo {
-    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='240'%3E%3Cg%20fill='none'%20stroke='%2322372B'%20stroke-opacity='0.09'%20stroke-width='1.1'%3E%3Cpath%20d='M0%2030%20C200%200%20400%2060%20600%2030%20S1000%200%201200%2030'/%3E%3Cpath%20d='M0%2070%20C200%2040%20400%20100%20600%2070%20S1000%2040%201200%2070'/%3E%3Cpath%20d='M0%20110%20C200%2080%20400%20140%20600%20110%20S1000%2080%201200%20110'/%3E%3Cpath%20d='M0%20150%20C200%20120%20400%20180%20600%20150%20S1000%20120%201200%20150'/%3E%3Cpath%20d='M0%20190%20C200%20160%20400%20220%20600%20190%20S1000%20160%201200%20190'/%3E%3Cpath%20d='M0%20230%20C200%20200%20400%20260%20600%20230%20S1000%20200%201200%20230'/%3E%3C/g%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg%20xmlns='http://www.w3.org/2000/svg'%20width='1200'%20height='240'%3E%3Cg%20fill='none'%20stroke='%23A9D6E5'%20stroke-opacity='0.10'%20stroke-width='1.1'%3E%3Cpath%20d='M0%2030%20C200%200%20400%2060%20600%2030%20S1000%200%201200%2030'/%3E%3Cpath%20d='M0%2070%20C200%2040%20400%20100%20600%2070%20S1000%2040%201200%2070'/%3E%3Cpath%20d='M0%20110%20C200%2080%20400%20140%20600%20110%20S1000%2080%201200%20110'/%3E%3Cpath%20d='M0%20150%20C200%20120%20400%20180%20600%20150%20S1000%20120%201200%20150'/%3E%3Cpath%20d='M0%20190%20C200%20160%20400%20220%20600%20190%20S1000%20160%201200%20190'/%3E%3Cpath%20d='M0%20230%20C200%20200%20400%20260%20600%20230%20S1000%20200%201200%20230'/%3E%3C/g%3E%3C/svg%3E");
     background-size: 1200px 240px;
   }
 
@@ -34,6 +35,14 @@ body {
   }
   .section-title {
     @apply font-display text-xl font-medium uppercase tracking-[0.06em] text-pine;
+  }
+
+  /* Layout --------------------------------------------------------------- */
+  /* The page shell. Fluid so the content fills a wide viewport — including a
+     large monitor read at 50% browser zoom, which doubles the CSS width —
+     with a ceiling so it never sprawls at extreme zoom-out. */
+  .shell {
+    @apply mx-auto w-full max-w-[2800px] px-4 sm:px-6 xl:px-8 3xl:px-12;
   }
 
   /* Surfaces ------------------------------------------------------------- */

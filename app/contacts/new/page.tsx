@@ -15,7 +15,7 @@ export default async function NewContactPage({
   });
 
   return (
-    <div className="space-y-6">
+    <div className="mx-auto w-full max-w-xl space-y-6">
       <div>
         <Link
           href="/contacts"
