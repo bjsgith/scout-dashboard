@@ -13,14 +13,15 @@ no external APIs. Stack: Next.js (App Router, TS, React 19) · Prisma · SQLite 
 
 ```bash
 npm run dev          # dev server on http://127.0.0.1:3000 (note the -H 127.0.0.1 binding)
-npm run build        # production build
-npm run lint         # next lint
+npm run build        # production build (webpack)
+npm run lint         # ESLint flat-config checks
 npm run db:migrate   # prisma migrate dev
 npm run db:seed      # load fake demo data (tsx prisma/seed.ts)
 ```
 
 First-time setup: `cp .env.example .env && npm install && npx prisma migrate dev && npm run db:seed`.
-There is no test suite. After editing `prisma/schema.prisma`, run `npm run db:migrate`.
+There is no test suite. Node.js 20.9.0 or newer is required. After editing
+`prisma/schema.prisma`, run `npm run db:migrate`.
 
 ## Architecture & conventions
 

@@ -15,7 +15,7 @@ Next.js (App Router, TypeScript) · Prisma · SQLite · Tailwind CSS.
 
 ## Requirements
 
-- Node.js **≥ 20**
+- Node.js **≥ 20.9.0**
 
 ## Setup
 
@@ -36,6 +36,7 @@ Then open <http://127.0.0.1:3000>.
 | `npm run dev`       | Dev server, bound to `127.0.0.1:3000`       |
 | `npm run build`     | Production build                            |
 | `npm run start`     | Production server, bound to `127.0.0.1`     |
+| `npm run lint`      | ESLint checks                               |
 | `npm run db:migrate`| `prisma migrate dev`                        |
 | `npm run db:seed`   | Load fake demo data                         |
 
