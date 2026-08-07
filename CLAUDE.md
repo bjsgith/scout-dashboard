@@ -15,13 +15,14 @@ no external APIs. Stack: Next.js (App Router, TS, React 19) · Prisma · SQLite 
 npm run dev          # dev server on http://127.0.0.1:3000 (note the -H 127.0.0.1 binding)
 npm run build        # production build (webpack)
 npm run lint         # ESLint flat-config checks
+npm test             # host-validation unit tests
 npm run db:migrate   # prisma migrate dev
 npm run db:seed      # load fake demo data (tsx prisma/seed.ts)
 ```
 
 First-time setup: `cp .env.example .env && npm install && npx prisma migrate dev && npm run db:seed`.
-There is no test suite. Node.js 20.9.0 or newer is required. After editing
-`prisma/schema.prisma`, run `npm run db:migrate`.
+Node.js 20.9.0 or newer is required. After editing `prisma/schema.prisma`, run
+`npm run db:migrate`.
 
 ## Architecture & conventions
 
@@ -84,3 +85,6 @@ This repo is **public**. The user's real data must never be committed.
   Prisma resolves SQLite paths relative to `prisma/`, so this lands the DB at repo-root `data/`.
 - `.env` is gitignored; only `.env.example` and the **fake** `prisma/seed.ts` are committed.
 - Keep the localhost-only binding (`-H 127.0.0.1` in `dev`/`start`) and the no-auth design.
+- Keep the strict raw `Host` allowlist in `proxy.ts`: only `127.0.0.1:<port>` and
+  `localhost:<port>` are supported. Proxies, tunnels, and non-loopback deployments are not.
+- Same-user local processes are trusted under the intentional no-auth model.
