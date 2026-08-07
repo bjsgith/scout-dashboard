@@ -26,18 +26,19 @@ export default function DonutChart({
   const r = (size - stroke) / 2;
   const c = 2 * Math.PI * r;
 
-  let offset = 0;
-  const arcs = slices.map((d) => {
+  const arcs = slices.map((d, index) => {
     const len = (d.value / total) * c;
-    const arc = {
+    const precedingValue = slices
+      .slice(0, index)
+      .reduce((sum, slice) => sum + slice.value, 0);
+
+    return {
       ...d,
       dash: len,
       gap: c - len,
       // Rotate each arc to start where the previous ended; -90° puts 0 at top.
-      rotate: (offset / c) * 360 - 90,
+      rotate: (precedingValue / total) * 360 - 90,
     };
-    offset += len;
-    return arc;
   });
 
   return (
